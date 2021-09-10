@@ -1,0 +1,62 @@
+Re=10:100:100000;
+lambda1=64./Re;
+lambda2=0.3164./Re.^0.25;
+r=0.0095/2;
+for i=1:length(Re)
+lambda3(i)=bisect(Re(i),0,1,1e-5);
+lambda4(i)=bisect1(Re(i),0,1,r,1e-5);
+end
+
+lambda5(Re<=2300)=lambda1(Re<=2300);
+lambda5(Re>2300)=lambda2(Re>2300);
+Re1=2800;
+Re2=3100;
+[a,b]=TurnAround(Re1,Re2);
+lambda6=a.*Re.^b;
+lambda6=[lambda1(Re<=Re1) lambda6(Re>Re1&Re<=Re2) lambda2(Re>Re2)];
+figure;
+plot(Re,lambda1,'LineWidth',2);
+hold on;
+plot(Re,lambda2,'LineWidth',2);
+hold on;
+plot(Re,lambda3,'LineWidth',2);
+hold on;
+plot(Re,lambda4,'LineWidth',2);
+hold on;
+plot(Re,lambda5,'LineWidth',2);
+hold on;
+plot(Re,lambda6,'LineWidth',2);
+hold on;
+lg=legend("1","2","3","4","5","6");
+ti=title('不同损失系数随雷诺数变化');
+ti.FontSize=16;
+lg.FontSize=16;
+xlabel('Re','interpreter','latex', 'FontSize', 16);
+ylabel('$\lambda$','interpreter','latex', 'FontSize', 16);
+axis([1000,5000,0,0.1]);
+set(gca,'FontSize',16);
+
+figure;
+plot(log10(Re),log10(lambda1),'LineWidth',2);
+hold on;
+plot(log10(Re),log10(lambda2),'LineWidth',2);
+hold on;
+plot(log10(Re),log10(lambda3),'LineWidth',2);
+hold on;
+plot(log10(Re),log10(lambda4),'LineWidth',2);
+hold on;
+plot(log10(Re),log10(lambda5),'LineWidth',2);
+hold on;
+plot(log10(Re),log10(lambda6),'LineWidth',2);
+hold on;
+lg=legend("1","2","3","4","5","6");
+ti=title('不同损失系数随雷诺数变化');
+ti.FontSize=16;
+lg.FontSize=16;
+xlabel('Re','interpreter','latex', 'FontSize', 16);
+ylabel('$\lambda$','interpreter','latex', 'FontSize', 16);
+axis([0.5,8,-2.5,1]);
+set(gca,'FontSize',16);
+data=[Re',lambda1',lambda2',lambda3',lambda4',lambda6'];
+xlswrite("/data.xlsx",data);
+
